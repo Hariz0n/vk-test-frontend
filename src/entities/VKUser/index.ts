@@ -1,0 +1,1 @@
+export type { VKUser } from './model/vk-user.type'

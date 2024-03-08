@@ -23,7 +23,7 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
 
   return (
     <Panel id={id}>
-      <PanelHeader>Главная</PanelHeader>
+      <PanelHeader>Главная 2</PanelHeader>
       {fetchedUser && (
         <Group header={<Header mode="secondary">User Data Fetched with VK Bridge</Header>}>
           <Cell before={photo_200 && <Avatar src={photo_200} />} subtitle={city?.title}>
