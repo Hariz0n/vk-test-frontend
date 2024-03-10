@@ -6,7 +6,8 @@ export const useGetAgifyUserLazy = (name: string) => {
     queryKey: ["agifyUser", name] as const,
     queryFn: fetchAgifyUser,
     enabled: false,
-    staleTime: 1000 * 60 * 60 * 2
+    staleTime: 1000 * 60 * 60 * 2,
+    retry: 0
   });
   return fetchData;
 };

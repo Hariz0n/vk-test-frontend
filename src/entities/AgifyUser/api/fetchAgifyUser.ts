@@ -8,6 +8,6 @@ export const fetchAgifyUser: QueryFunction<
   const response = await fetch(`https://api.agify.io?name=${queryKey[1]}`, {
     signal,
   });
-  if (!response.ok) return null;
+  if (!response.ok) throw new Error("Не удалось загрузить данные о пользователе");
   return response.json();
 };

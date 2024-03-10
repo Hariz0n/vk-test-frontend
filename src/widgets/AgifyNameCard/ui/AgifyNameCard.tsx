@@ -3,16 +3,18 @@ import {
   Button,
   Div,
   FormLayoutGroup,
+  FormStatus,
   Group,
   SimpleCell,
   Spinner,
 } from "@vkontakte/vkui";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { AgifyNameFormSchema } from "../model/agifyNameFormSchema";
 import * as yup from "yup";
 import styles from "./AgifyNameFormInputs.module.css";
 import { useGetAgifyUserLazy } from "@/entities/AgifyUser";
 import { AgifyNameInput } from "@/features/AgifyNameInput";
+import { getNoun } from "@/shared/utils";
 
 type AgifyNameFormInputs = yup.InferType<typeof AgifyNameFormSchema>;
 
@@ -24,19 +26,12 @@ export const AgifyNameCard = () => {
     resolver: yupResolver(AgifyNameFormSchema),
   });
 
-  const {
-    formState: { isSubmitting },
-  } = form;
+  const nameValue = useWatch({ control: form.control, name: "name" });
 
   const { data, refetch, isFetching, isFetched, isStale, isError } =
-    useGetAgifyUserLazy(form.getValues("name") || "");
+    useGetAgifyUserLazy(nameValue || "");
 
   const submitHandler = async () => {
-    console.log("name - ", form.getValues("name"));
-
-    console.log("🚀 ~ AgifyNameCard ~ !isFetched:", !isFetched);
-    console.log("🚀 ~ AgifyNameCard ~ isStale:", isStale);
-    console.log("🚀 ~ AgifyNameCard ~ isError:", isError);
     if (!isFetched || isStale || isError) {
       await refetch();
     }
@@ -53,11 +48,7 @@ export const AgifyNameCard = () => {
             mode="horizontal"
             className={styles["AgifyForm-controls"]}
           >
-            <AgifyNameInput
-              submitHandler={submitHandler}
-              control={form.control}
-              name="name"
-            />
+            <AgifyNameInput submitHandler={submitHandler} />
             <Button type="submit" size="l">
               Найти
             </Button>
@@ -65,11 +56,22 @@ export const AgifyNameCard = () => {
         </form>
       </FormProvider>
       <Div>
-        {(isSubmitting || isFetching) && <Spinner size="large" />}
-        {!(isSubmitting || isFetching) && data && (
-          <SimpleCell subtitle={data.count}>
-            {data.name} - {data.age}
+        {(form.formState.isSubmitting || isFetching) && (
+          <Spinner size="large" />
+        )}
+        {!(form.formState.isSubmitting || isFetching) && data && (
+          <SimpleCell subtitle={`Всего найдено: ${data.count}`}>
+            {`${data.name}, средний возраст: ${
+              data.age
+                ? `${data.age} ${getNoun(data.age, ["год", "года", "лет"])}`
+                : "не известен"
+            }`}
           </SimpleCell>
+        )}
+        {!(form.formState.isSubmitting || isFetching) && isError && (
+          <FormStatus header="Ошибка" mode="error">
+            Не удалось загрузить данные
+          </FormStatus>
         )}
       </Div>
     </Group>
