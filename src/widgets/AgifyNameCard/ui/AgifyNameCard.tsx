@@ -15,6 +15,7 @@ import styles from "./AgifyNameFormInputs.module.css";
 import { useGetAgifyUserLazy } from "@/entities/AgifyUser";
 import { AgifyNameInput } from "@/features/AgifyNameInput";
 import { getNoun } from "@/shared/utils";
+import { useEffect } from "react";
 
 type AgifyNameFormInputs = yup.InferType<typeof AgifyNameFormSchema>;
 
@@ -28,14 +29,24 @@ export const AgifyNameCard = () => {
 
   const nameValue = useWatch({ control: form.control, name: "name" });
 
-  const { data, refetch, isFetching, isFetched, isStale, isError } =
+  const { data, refetch, isFetching, isFetched, isStale, isError, isSuccess } =
     useGetAgifyUserLazy(nameValue || "");
 
   const submitHandler = async () => {
     if (!isFetched || isStale || isError) {
-      await refetch();
+      await refetch({ throwOnError: true });
     }
   };
+
+  useEffect(() => {
+    let timerId: ReturnType<typeof setTimeout> | undefined;
+    if (nameValue && (!isError || isSuccess)) {
+      timerId = setTimeout(() => {
+        form.handleSubmit(submitHandler)();
+      }, 3000);
+    }
+    return () => timerId && clearTimeout(timerId);
+  }, [nameValue, isError, isSuccess]);
 
   return (
     <Group>
@@ -48,7 +59,7 @@ export const AgifyNameCard = () => {
             mode="horizontal"
             className={styles["AgifyForm-controls"]}
           >
-            <AgifyNameInput submitHandler={submitHandler} />
+            <AgifyNameInput />
             <Button type="submit" size="l">
               Найти
             </Button>
@@ -61,7 +72,7 @@ export const AgifyNameCard = () => {
         )}
         {!(form.formState.isSubmitting || isFetching) && data && (
           <SimpleCell subtitle={`Всего найдено: ${data.count}`}>
-            {`${data.name}, средний возраст: ${
+            {`${data.name}, средний возраст ${
               data.age
                 ? `${data.age} ${getNoun(data.age, ["год", "года", "лет"])}`
                 : "не известен"

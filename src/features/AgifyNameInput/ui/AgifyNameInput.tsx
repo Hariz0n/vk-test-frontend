@@ -1,32 +1,9 @@
 import { FormItem, Input } from "@vkontakte/vkui";
-import { FC, useEffect } from "react";
-import {
-  Controller,
-  SubmitHandler,
-  useFormContext,
-  useWatch,
-} from "react-hook-form";
+import { FC } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
-type AgifyNameInputProps = {
-  submitHandler: SubmitHandler<{ name?: string }>;
-};
-
-export const AgifyNameInput: FC<AgifyNameInputProps> = ({ submitHandler }) => {
-  const { control, handleSubmit, formState } = useFormContext<{
-    name?: string;
-  }>();
-
-  const inputValue = useWatch({ control, name: "name" });
-
-  useEffect(() => {
-    // TODO: fix two rerenders on manual submit
-    let timerId: ReturnType<typeof setTimeout>;
-    if (inputValue) {
-      timerId = setTimeout(handleSubmit(submitHandler), 3000);
-    }
-    return () => clearTimeout(timerId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleSubmit, inputValue, formState.isSubmitting]);
+export const AgifyNameInput: FC = () => {
+  const { control } = useFormContext<{ name?: string }>();
 
   return (
     <Controller

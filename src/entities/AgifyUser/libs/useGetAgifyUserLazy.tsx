@@ -7,7 +7,11 @@ export const useGetAgifyUserLazy = (name: string) => {
     queryFn: fetchAgifyUser,
     enabled: false,
     staleTime: 1000 * 60 * 60 * 2,
-    retry: 0
+    retry: 0,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
   });
   return fetchData;
 };
