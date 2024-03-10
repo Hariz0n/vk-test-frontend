@@ -1,0 +1,9 @@
+.AgifyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.AgifyForm-controls {
+  gap: 0 1rem;
+}

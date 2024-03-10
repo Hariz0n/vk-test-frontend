@@ -1,5 +1,5 @@
 import { QueryFunction } from "@tanstack/react-query";
-import { NinjaFact } from "..";
+import { NinjaFact } from "../model/ninja-fact.type";
 
 export const fetchNinjaCat: QueryFunction<NinjaFact | null, string[]> = async ({
   signal,

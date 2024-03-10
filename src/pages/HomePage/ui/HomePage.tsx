@@ -1,3 +1,4 @@
+import { AgifyNameCard } from "@/widgets/AgifyNameCard";
 import { FactCard } from "@/widgets/FactCard";
 import { NavIdProps, Panel, PanelHeader, Title } from "@vkontakte/vkui";
 import { FC } from "react";
@@ -9,6 +10,7 @@ export const HomePage: FC<NavIdProps> = ({ id }) => {
         <Title level="2">Найди - Тестовое на стажировку</Title>
       </PanelHeader>
       <FactCard />
+      <AgifyNameCard />
     </Panel>
   );
 };

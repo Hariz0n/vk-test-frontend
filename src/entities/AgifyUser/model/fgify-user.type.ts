@@ -1,4 +1,4 @@
-export type FgifyUser = {
+export type AgifyUser = {
   count: number;
   name: string;
   age: number;
